@@ -67,3 +67,28 @@ printf("\n%s,%s",p5+1,p6+1);//CD,D
 char (*p7)[4] = &b;
 char (*p8)[6] = b;
 printf("\n%s,%s",p7+1,p8+1);//结束符,越界未知
+
+int arr[4]={1,3,5,7};
+int *ptr1=(int *)(&arr+1);
+//        ptr1：将&arr+1 的值强制转换成int*类型，赋值给int* 类型的变量ptr1，ptr1肯定指到数组arr的下一个int类型数据了
+printf("\n%d",ptr1[-1]);
+//ptr1[-1]被解析成*(ptr1-1)，即ptr1 往后退4个byte。所以其值为7;
+
+int *ptr3=(int *)(arr+1);
+//        arr为首元素arr[0]的地址，+1表示为第2个元素的地址arr[1],所以*ptr3的值为3
+printf("\n%d=%d",ptr3,*ptr3);
+
+int *ptr2=(int *)((int)arr+1);
+
+//        ptr2：按照上面的讲解，(int)arr+1的值是元素arr[0]的第二个字节的地址。然后把这个地址强制转换成int*类型的值赋给ptr2，也就是说*ptr2的值应该为元素a[0]的第二个字节开始的连续4个byte 的内容。
+printf("\n%d",ptr2); //objc-c下打印*ptr2会失败，但从其指向的地址(0x000000006fdab945)来看=ptr3的地址(0x000000016fdab948)-3，是对的，指向了arr[0]的第2个字节的地址
+
+
+union check
+{
+int i;
+char ch;
+} c;
+c.i = 1;
+printf("\n%d",c.ch); //当前系统为大端模式这个函数返回c.ch!=1；如果为小端模式，函数返回c.ch==1 //iphone6(iOS9)下返回为1
+
